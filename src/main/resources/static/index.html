@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord & Minecraft Accounts</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .account-row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #333333;
+            margin-bottom: 10px;
+        }
+
+        .account-row:hover {
+            background-color: #333333;
+        }
+
+        .icon {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .minecraft-icon img {
+            width: 50px;
+            height: 50px;
+            border-radius: 0; /* Minecraft skins are square */
+        }
+
+        .name-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-info span {
+            margin: 2px 0;
+        }
+
+        .name-info strong {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>Discord and Minecraft Accounts</h1>
+
+<div id="account-list">
+    <!-- Data will be inserted here -->
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/data/list')
+            .then(response => response.json())
+            .then(data => {
+                const accountList = document.getElementById('account-list');
+                data.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'account-row';
+
+                    // Icon section (Discord avatar and Minecraft skin)
+                    const iconSection = document.createElement('div');
+                    iconSection.className = 'icon';
+                    iconSection.innerHTML = `
+                            <img src="${item.avatar}" alt="Discord Avatar">
+                            <img class="minecraft-icon" src="https://crafatar.com/avatars/${item.uuid}" alt="Minecraft Skin">
+                        `;
+                    row.appendChild(iconSection);
+
+                    // Inline Name Info (Discord tag and Minecraft name)
+                    const nameInfo = document.createElement('div');
+                    nameInfo.className = 'name-info';
+                    nameInfo.innerHTML = `
+                            <span><strong>Discord:</strong> ${item.tag}</span>
+                            <span><strong>Minecraft:</strong> ${item.name}</span>
+                        `;
+                    row.appendChild(nameInfo);
+
+                    // Append the row to the account list
+                    accountList.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
+</body>
+</html>
