@@ -67,7 +67,7 @@ public class DataService {
         addOrUpdateNewData();
     }
 
-    @Scheduled(fixedRate = 30 * 60000, initialDelay = 15000)
+    @Scheduled(cron = "0 0 */2 * * *")
     public void refreshCache() {
         log.info("Validating existing cache");
         List<CachedData> cachedDataList = dataRepository.findAll();

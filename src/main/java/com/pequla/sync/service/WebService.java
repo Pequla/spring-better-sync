@@ -17,7 +17,8 @@ public class WebService {
 
     public DataModel getDataByDiscordId(String discordId) {
         return webClient.get()
-                .uri("https://link.samifying.com/api/data/discord/" + discordId + "?log=0")
+                .uri("https://link.samifying.com/api/data/discord/" + discordId)
+                .header("X-Name", "BetterSync/1.0")
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, rsp ->
                         Mono.error(new DataNotFoundException("User with ID " + discordId + " not found"))
@@ -28,7 +29,13 @@ public class WebService {
 
     public AccountModel getAccount(String uuid) {
         return webClient.get()
-                .uri("https://link.samifying.com/api/cache/uuid/" + uuid + "?log=0")
+                .uri("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid)
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
+                .header("Accept", "application/json")
+                .header("Accept-Language", "en-US,en;q=0.9")
+                .header("Connection", "keep-alive")
+                .header("DNT", "1")
+                .header("Referer", "https://beocraft.net/")
                 .retrieve()
                 .bodyToMono(AccountModel.class)
                 .block();
