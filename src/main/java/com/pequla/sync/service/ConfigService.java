@@ -17,4 +17,12 @@ public class ConfigService {
     public String getGuildId() {
         return repository.findByKey("guild.id").orElseThrow().getValue();
     }
+
+    public String getApiBase() {
+        return repository.findByKey("api.base").orElseThrow().getValue();
+    }
+
+    public String getApiHeader() {
+        return repository.findByKey("api.header").orElseThrow().getValue();
+    }
 }

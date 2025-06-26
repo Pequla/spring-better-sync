@@ -16,4 +16,8 @@ public interface CachedDataRepository extends JpaRepository<CachedData, Integer>
     List<CachedData> findByDiscordIdIn(List<String> discordIds);
 
     List<CachedData> findByUuidIn(List<String> uuids);
+
+    boolean existsByIdAndDiscordId(Integer id, String discordId);
+
+    boolean existsByIdAndUuid(Integer id, String uuid);
 }

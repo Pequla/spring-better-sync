@@ -5,6 +5,7 @@ import com.pequla.sync.service.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +55,19 @@ public class DataController {
     }
 
     @PostMapping(path = "/discord")
-    public List<CachedData> getDataFroDiscordIds(@RequestBody List<String> ids) {
+    public List<CachedData> getDataFromDiscordIds(@RequestBody List<String> ids) {
         return dataService.getCachedDataByDiscordIds(ids);
+    }
+
+    @PostMapping(path = "/sync")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void sync() {
+        dataService.syncCacheWithGuild();
+    }
+
+    @PostMapping(path = "/refresh")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void refresh() {
+        dataService.refreshCache();
     }
 }

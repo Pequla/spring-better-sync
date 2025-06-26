@@ -13,12 +13,13 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class WebService {
 
+    private final ConfigService configService;
     private final WebClient webClient;
 
     public DataModel getDataByDiscordId(String discordId) {
         return webClient.get()
-                .uri("https://link.samifying.com/api/data/discord/" + discordId)
-                .header("X-Name", "BetterSync/1.0")
+                .uri(configService.getApiBase() + "/data/discord/" + discordId)
+                .header("X-Name", configService.getApiHeader())
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, rsp ->
                         Mono.error(new DataNotFoundException("User with ID " + discordId + " not found"))

@@ -41,5 +41,8 @@ public class CachedData {
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
+    private LocalDateTime joinedAt = LocalDateTime.now();
+
+    @Column(nullable = false)
     private LocalDateTime cachedAt = LocalDateTime.now();
 }

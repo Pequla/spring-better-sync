@@ -123,13 +123,17 @@ public class DataService {
 
     private void removeAndLog(CachedData cachedData) {
         log.info("Removing data for {}", cachedData.getDiscordId());
-        dataRepository.delete(cachedData);
+        dataRepository.deleteById(cachedData.getId());
     }
 
     private void syncDataForDiscordMember(Member member) {
+        Integer id = null;
         try {
             DataModel data = webService.getDataByDiscordId(member.getId());
+            id = data.getId();
+
             AccountModel account = webService.getAccount(data.getUuid());
+
             dataRepository.save(CachedData.builder()
                     .id(data.getId())
                     .discordId(member.getId())
@@ -139,11 +143,16 @@ public class DataService {
                     .name(account.getName())
                     .guildId(data.getGuild().getDiscordId())
                     .createdAt(data.getCreatedAt())
+                    .joinedAt(member.getTimeJoined().toLocalDateTime())
                     .cachedAt(LocalDateTime.now())
                     .build());
+            dataRepository.flush();
             log.info("Successfully saved data for {}", member.getId());
         } catch (Exception e) {
             log.error("Failed to save data for {}", member.getId());
+
+            if (id != null)
+                dataRepository.deleteById(id);
         }
     }
 }
